@@ -82,7 +82,7 @@ const Announcements = ({ announcements = [] }) => (
         category={item.category}
       />
     )}
-    keyExtractor={(item, index) => index.toString()}
+    keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
     contentContainerStyle={styles.servicesContainer}
   />
 );
@@ -195,7 +195,6 @@ const App = ({ externalAnnouncements = [] }) => {
       </View>
     </SafeAreaView>
   );
-
 };
 
 export default App;
@@ -303,5 +302,151 @@ const styles = StyleSheet.create({
   sectionText: {
     fontSize: 16,
     color: 'gray',
+  },
+  serviceCard: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 10,
+    width: '90%',
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.5,
+    elevation: 2,
+  },
+  serviceImage: {
+    width: '100%',
+    height: 150,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  username: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  rating: {
+    fontSize: 16,
+    color: 'gold',
+  },
+  description: {
+    fontSize: 16,
+    color: 'gray',
+  },
+  price: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'green',
+    marginTop: 10,
+  },
+  category: {
+    fontSize: 16,
+    color: 'gray',
+    marginTop: 5,
+  },
+  servicesContainer: {
+    paddingVertical: 20,
+  },
+  sideBlockContainer: {
+    marginVertical: 20,
+    padding: 15,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    width: '45%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.5,
+    elevation: 2,
+  },
+  blockTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  blockGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  blockItem: {
+    width: '48%',
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  socialItem: {
+    width: '48%',
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 5,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  socialIconImage: {
+    width: 24,
+    height: 24,
+    marginRight: 10,
+  },
+  blockText: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  fullWidthContainer: {
+    marginVertical: 20,
+    padding: 15,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    width: '90%',
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.5,
+    elevation: 2,
+  },
+  fullWidthTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  linksContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  linkItem: {
+    width: '48%',
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  linkText: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  divider: {
+    height: 1,
+    width: '90%',
+    backgroundColor: '#ddd',
+    alignSelf: 'center',
+    marginVertical: 20,
+  },
+  horizontalBlocksContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '90%',
+    alignSelf: 'center',
   },
 });
