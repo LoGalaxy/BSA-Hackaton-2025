@@ -24,18 +24,19 @@ const Header = ({ searchText, setSearchText }) => (
       <Text style={styles.headerButtonText}>Become a seller</Text>
     </Link>
     <View style={styles.headerButtons}>
-      <Link href="/signIn" asChild>
-        <Pressable style={styles.headerButton}>
-          <Text style={styles.headerButtonText}>Sign Up</Text>
-        </Pressable>
-      </Link>
-      <Link href="/logIn" asChild>
-        <Pressable style={styles.headerButton}>
-          <Text style={styles.headerButtonText}>Log In</Text>
-        </Pressable>
-      </Link>
+      <HeaderButton href="/signIn" text="Sign Up" />
+      <HeaderButton href="/logIn" text="Log In" />
     </View>
   </View>
+);
+
+// HeaderButton Component
+const HeaderButton = ({ href, text }) => (
+  <Link href={href} asChild>
+    <Pressable style={styles.headerButton}>
+      <Text style={styles.headerButtonText}>{text}</Text>
+    </Pressable>
+  </Link>
 );
 
 // ServiceCard Component
@@ -57,14 +58,16 @@ const ServiceCard = ({ imageSource, username, rating, description, price, catego
 // ContentSection Component
 const ContentSection = ({ title, text, link }) => (
   <View style={styles.contentSection}>
-    {link ? (
-      <Pressable onPress={() => Linking.openURL(link)}>
+    <View style={styles.contentSectionInner}>
+      {link ? (
+        <Pressable onPress={() => Linking.openURL(link)}>
+          <Text style={styles.sectionTitle}>{title}</Text>
+        </Pressable>
+      ) : (
         <Text style={styles.sectionTitle}>{title}</Text>
-      </Pressable>
-    ) : (
-      <Text style={styles.sectionTitle}>{title}</Text>
-    )}
-    <Text style={styles.sectionText}>{text}</Text>
+      )}
+      <Text style={styles.sectionText}>{text}</Text>
+    </View>
   </View>
 );
 
@@ -111,8 +114,9 @@ const SideBlockContainer = ({ title, items, isSocial }) => {
           <Pressable
             key={index}
             style={[
-              isSocial ? styles.socialItem : styles.blockItem,
-              isSocial && { borderLeftWidth: 4, borderLeftColor: socialColors[item] || '#ddd' }
+              styles.blockItem,
+              isSocial && styles.socialItem,
+              isSocial && { borderLeftColor: socialColors[item] || '#ddd' }
             ]}
           >
             {isSocial && socialIcons[item] && (
@@ -136,20 +140,40 @@ const SideBlockContainer = ({ title, items, isSocial }) => {
 };
 
 // FullWidthContainer Component
-const FullWidthContainer = () => (
-  <View style={styles.fullWidthContainer}>
-    <Text style={styles.fullWidthTitle}>Informations</Text>
-    <View style={styles.linksContainer}>
-      {['Contact Us', 'About Us', 'Security', 'Privacy Policy', 'Terms of Service'].map((item, index) => (
-        <Link key={index} href={`/${item.toLowerCase().replace(' ', '')}`} asChild>
-          <Pressable style={styles.linkItem}>
-            <Text style={styles.linkText}>{item}</Text>
-          </Pressable>
-        </Link>
-      ))}
+const FullWidthContainer = () => {
+  const items = [
+    { text: 'Contact Us', link: '/contactus' },
+    { text: 'About Us', link: '/aboutus' },
+    { text: 'Security', link: '/security' },
+    { text: 'Privacy Policy', link: '/privacypolicy' },
+    { text: 'Terms of Service', link: '/termsofservice' }
+  ];
+
+  return (
+    <View style={styles.fullWidthContainer}>
+      <Text style={styles.fullWidthTitle}>Informations</Text>
+      <View style={styles.scrollViewWrapper}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={[
+            styles.linksContainer,
+            { width: items.length <= 3 ? '100%' : 'auto' }
+          ]}
+          centerContent={true}
+        >
+          {items.map((item, index) => (
+            <Link key={index} href={item.link} asChild>
+              <Pressable style={styles.linkItem}>
+                <Text style={styles.linkText}>{item.text}</Text>
+              </Pressable>
+            </Link>
+          ))}
+        </ScrollView>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 // App Component
 const App = ({ externalAnnouncements = [] }) => {
@@ -160,7 +184,7 @@ const App = ({ externalAnnouncements = [] }) => {
       <View style={styles.container}>
         <Header searchText={searchText} setSearchText={setSearchText} />
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
-          <ImageBackground source={backGroundImage} resizeMode="cover" style={styles.backgroundContainer}>
+          <ImageBackground source={backGroundImage} resizeMode="cover" style={styles.imageBackground}>
             <Link href="/menu" asChild>
               <Pressable style={styles.button}>
                 <Text style={styles.buttonText}>Fiver</Text>
@@ -172,7 +196,7 @@ const App = ({ externalAnnouncements = [] }) => {
             />
             <ContentSection
               title="About Us"
-              text="Welcome to our platform. We offer a variety of services to help you achieve your goals."
+              text="We offer a variety of services to help you achieve your goals."
             />
             <ContentSection
               title="Our Services"
@@ -202,7 +226,7 @@ export default App;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f0f0f0',
   },
   container: {
     flex: 1,
@@ -212,10 +236,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    padding: 15,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#e0e0e0',
   },
   logo: {
     width: 120,
@@ -226,10 +250,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   headerButton: {
-    marginLeft: 10,
+    marginLeft: 15,
   },
   headerButtonText: {
-    color: 'green',
+    color: '#22780f',
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -239,12 +263,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
   },
-  backgroundContainer: {
+  imageBackground: {
     width: '100%',
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-    justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 20,
+    paddingBottom: 20,
   },
   searchContainer: {
     flex: 1,
@@ -253,26 +276,30 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     height: 40,
-    width: '80%',
-    borderColor: 'gray',
+    width: '90%',
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 25,
     paddingHorizontal: 15,
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
   button: {
-    height: 50,
+    height: 45,
     width: 140,
     borderRadius: 25,
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.75)',
-    padding: 6,
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    padding: 10,
     marginBottom: 20,
-    elevation: 5,
+    elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
   buttonText: {
     color: 'white',
@@ -281,45 +308,53 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   contentSection: {
-    marginVertical: 20,
+    marginVertical: 10,
     padding: 15,
     backgroundColor: 'white',
-    borderRadius: 20,
-    width: '85%',
+    borderRadius: 15,
+    width: '90%',
+    alignSelf: 'center',
     borderWidth: 1,
-    borderColor: '#eaeaea',
+    borderColor: '#e0e0e0',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
     elevation: 2,
   },
+  contentSectionInner: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   sectionTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    textAlign: 'center',
   },
   sectionText: {
     fontSize: 16,
-    color: 'gray',
+    color: '#555',
+    textAlign: 'center',
   },
   serviceCard: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 15,
     padding: 15,
     marginVertical: 10,
     width: '90%',
     alignSelf: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
     elevation: 2,
   },
   serviceImage: {
     width: '100%',
     height: 150,
-    borderRadius: 10,
+    borderRadius: 15,
     marginBottom: 10,
   },
   infoContainer: {
@@ -337,17 +372,17 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    color: 'gray',
+    color: '#555',
   },
   price: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'green',
+    color: '#007BFF',
     marginTop: 10,
   },
   category: {
     fontSize: 16,
-    color: 'gray',
+    color: '#555',
     marginTop: 5,
   },
   servicesContainer: {
@@ -357,96 +392,121 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     padding: 15,
     backgroundColor: 'white',
-    borderRadius: 10,
-    width: '45%',
+    borderRadius: 15,
+    width: '35%',
+    minHeight: 220,
+    alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
     elevation: 2,
   },
   blockTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 15,
+    textAlign: 'center',
   },
   blockGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   blockItem: {
-    width: '48%',
+    width: '150%',
     padding: 10,
     marginBottom: 10,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 5,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
   },
   socialItem: {
-    width: '48%',
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 5,
-    alignItems: 'center',
     flexDirection: 'row',
+    justifyContent: 'center',
   },
   socialIconImage: {
-    width: 24,
-    height: 24,
+    width: 25,
+    height: 25,
     marginRight: 10,
   },
   blockText: {
     fontSize: 16,
     textAlign: 'center',
+    fontWeight: '500',
   },
   fullWidthContainer: {
     marginVertical: 20,
     padding: 15,
+    paddingBottom: 20,
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 15,
     width: '90%',
     alignSelf: 'center',
+    alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
     elevation: 2,
   },
   fullWidthTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  scrollViewWrapper: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   linksContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexWrap: 'nowrap',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   linkItem: {
-    width: '48%',
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 5,
+    minWidth: 120,
+    marginHorizontal: 8,
+    padding: 12,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
   },
   linkText: {
     fontSize: 16,
     textAlign: 'center',
+    fontWeight: '500',
   },
   divider: {
     height: 1,
     width: '90%',
-    backgroundColor: '#ddd',
+    backgroundColor: '#e0e0e0',
     alignSelf: 'center',
     marginVertical: 20,
   },
   horizontalBlocksContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '90%',
+    justifyContent: 'space-evenly',
+    alignItems: 'flex-start',
+    width: '100%',
+    alignContent: 'center',
     alignSelf: 'center',
   },
 });
