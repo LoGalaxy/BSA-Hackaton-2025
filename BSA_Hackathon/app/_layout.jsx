@@ -33,7 +33,11 @@ export default function RootLayout() {
       <Stack.Screen name="index" options={{ headerShown: false, title: 'Home' }} />
       <Stack.Screen name="menu" options={{ headerShown: true, title: 'Menu', headerTitle: 'Fiver Menu' }} />
       <Stack.Screen name="signIn" options={{ headerShown: true, title: 'signIn', headerTitle: 'Fiver Sign' }} />
-      <Stack.Screen name="contact" options={{ headerShown: true, title: 'Contact', headerTitle: 'Contact Us' }} />
+      <Stack.Screen name="contactus" options={{ headerShown: true, title: 'Contact', headerTitle: 'Contact Us' }} />
+      <Stack.Screen name="aboutus" options={{ headerShown: true, title: 'About', headerTitle: 'About Us' }} />
+      <Stack.Screen name="security" options={{ headerShown: true, title: 'Security', headerTitle: 'Security' }} />
+      <Stack.Screen name="privacypolicy" options={{ headerShown: true, title: 'Privacy', headerTitle: 'Privacy Policy' }} />
+      <Stack.Screen name="termsofservice" options={{ headerShown: true, title: 'Terms', headerTitle: 'Terms of Service' }} />
       <Stack.Screen name="+not-found" options={{ headerShown: false }} />
     </Stack>
   );
