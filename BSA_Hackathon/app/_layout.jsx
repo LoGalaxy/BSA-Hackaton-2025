@@ -32,6 +32,7 @@ export default function RootLayout() {
     <Stack screenOptions={{ headerStyle: { backgroundColor: theme.headerBackground }, headerTintColor: theme.text, headerShadowVisible: false }}>
       <Stack.Screen name="index" options={{ headerShown: false, title: 'Home' }} />
       <Stack.Screen name="menu" options={{ headerShown: true, title: 'Menu', headerTitle: 'Fiver Menu' }} />
+      <Stack.Screen name="signIn" options={{ headerShown: true, title: 'signIn', headerTitle: 'Fiver Sign' }} />
       <Stack.Screen name="contact" options={{ headerShown: true, title: 'Contact', headerTitle: 'Contact Us' }} />
       <Stack.Screen name="+not-found" options={{ headerShown: false }} />
     </Stack>
