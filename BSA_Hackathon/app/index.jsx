@@ -92,47 +92,35 @@ const Announcements = ({ announcements = [] }) => (
   />
 );
 
-// SideBlockContainer Component
-const SideBlockContainer = ({ title, items, isSocial }) => {
-  const socialIcons = {
-    Facebook: facebookLogo,
-    Twitter: twitterLogo,
-    Instagram: instagramLogo,
-    LinkedIn: linkedinLogo,
-  };
-
-  const socialColors = {
-    Facebook: '#1877F2',
-    Twitter: '#1DA1F2',
-    Instagram: '#E4405F',
-    LinkedIn: '#0A66C2',
-  };
+// SocialMediaBlock Component
+const SocialMediaBlock = () => {
+  const socialItems = [
+    { name: 'Facebook', icon: facebookLogo, color: '#1877F2', url: 'https://facebook.com' },
+    { name: 'Twitter', icon: twitterLogo, color: '#1DA1F2', url: 'https://twitter.com' },
+    { name: 'Instagram', icon: instagramLogo, color: '#E4405F', url: 'https://instagram.com' },
+    { name: 'LinkedIn', icon: linkedinLogo, color: '#0A66C2', url: 'https://linkedin.com' },
+  ];
 
   return (
     <View style={styles.sideBlockContainer}>
-      <Text style={styles.blockTitle}>{title}</Text>
+      <Text style={styles.blockTitle}>Suivez-nous</Text>
       <View style={styles.blockGrid}>
-        {items.map((item, index) => (
+        {socialItems.map((item, index) => (
           <Pressable
             key={index}
             style={[
-              styles.blockItem,
-              isSocial && styles.socialItem,
-              isSocial && { borderLeftColor: socialColors[item] || '#ddd' }
+              styles.socialBlockItem,
+              { borderLeftColor: item.color }
             ]}
+            onPress={() => Linking.openURL(item.url)}
           >
-            {isSocial && socialIcons[item] && (
-              <Image
-                source={socialIcons[item]}
-                style={styles.socialIconImage}
-                resizeMode="contain"
-              />
-            )}
-            <Text style={[
-              styles.blockText,
-              isSocial && { color: socialColors[item] || '#333', fontWeight: 'bold' }
-            ]}>
-              {item}
+            <Image
+              source={item.icon}
+              style={styles.socialIconImage}
+              resizeMode="contain"
+            />
+            <Text style={[styles.blockText, { color: item.color, fontWeight: 'bold' }]}>
+              {item.name}
             </Text>
           </Pressable>
         ))}
@@ -236,7 +224,7 @@ const App = () => {
           <View style={styles.divider} />
           <View style={styles.horizontalBlocksContainer}>
             <CategoryBlock title="Categories" items={['Design', 'Development', 'Marketing', 'Writing']} />
-            <CategoryBlock title="Follow Us" items={['Facebook', 'Twitter', 'Instagram', 'LinkedIn']} isSocial />
+            <SocialMediaBlock />
           </View>
           <FullWidthContainer />
         </ScrollView>
@@ -532,5 +520,26 @@ const styles = StyleSheet.create({
     width: '100%',
     alignContent: 'center',
     alignSelf: 'center',
+  },
+  socialBlockItem: {
+    flexDirection: 'row',
+    width: '150%',
+    padding: 12,
+    marginBottom: 10,
+    backgroundColor: '#f8f8f8',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+    borderLeftWidth: 4,
+  },
+  socialIconImage: {
+    width: 28,
+    height: 28,
+    marginRight: 12,
   },
 });
