@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable, Alert } from 'react-native';
 
-const SignIn = () => {
+const LogIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [step, setStep] = useState(1);
 
-    const handleSignIn = () => {
+    const handleLogIn = () => {
         if (email && password) {
-            Alert.alert('Success', 'Sign in successful!');
+            Alert.alert('Success', 'Log in successful!');
         } else {
             Alert.alert('Error', 'Please enter both email and password.');
         }
@@ -15,37 +16,59 @@ const SignIn = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Register !</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="E-mail"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                placeholderTextColor="#aaa"
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                placeholderTextColor="#aaa"
-            />
+            <Text style={styles.title}>Register</Text>
 
-            <Pressable style={styles.button} onPress={handleSignIn}>
-                <Text style={styles.buttonText}>Sign In</Text>
+            <View style={styles.stepsContainer}>
+                {[1, 2, 3].map((stepNum) => (
+                    <Pressable
+                        key={stepNum}
+                        style={[styles.stepButton, step === stepNum && styles.activeStep]}
+                        onPress={() => setStep(stepNum)}
+                    >
+                        <Text style={styles.stepButtonText}>{stepNum}</Text>
+                    </Pressable>
+                ))}
+            </View>
+
+            <Text style={styles.stepText}>
+                {step === 1 ? 'Account Creation' : step === 2 ? 'Personal Data' : 'Account Type'}
+            </Text>
+
+            {step === 1 && (
+                <View style={styles.formContainer}>
+                    <TextInput style={styles.input} placeholder="Username" placeholderTextColor="#aaa" />
+                    <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" placeholderTextColor="#aaa" />
+                    <TextInput style={styles.input} placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry placeholderTextColor="#aaa" />
+                    <TextInput style={styles.input} placeholder="Confirm Password" secureTextEntry placeholderTextColor="#aaa" />
+                </View>
+            )}
+
+            {step === 2 && (
+                <View style={styles.formContainer}>
+                    <TextInput style={styles.input} placeholder="First Name" placeholderTextColor="#aaa" />
+                    <TextInput style={styles.input} placeholder="Last Name" placeholderTextColor="#aaa" />
+                    <form >
+                        <input type="date" id="birthdate" name="birthdate" style={styles.date} />
+                    </form>
+                </View>
+            )}
+
+            {step === 3 && (
+                <Text style={styles.stepText}>Choose Your Account Type</Text>
+            )}
+
+            <Pressable style={styles.button} onPress={handleLogIn}>
+                <Text style={styles.buttonText}>Log In</Text>
             </Pressable>
 
-            <Pressable style={styles.registerButton} onPress={handleSignIn}>
-                <Text style={styles.registerText}>Create an Account</Text>
+            <Pressable style={styles.forgotPassword} onPress={() => Alert.alert('Reset Password', 'Redirecting...')}>
+                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </Pressable>
         </View>
     );
 };
 
-export default SignIn;
+export default LogIn;
 
 const styles = StyleSheet.create({
     container: {
@@ -53,32 +76,42 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#f4f4f4',
+        backgroundColor: '#f8f9fa',
     },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 30,
-    },
-    input: {
-        width: '80%',
+    date: {
+        width: '100%',
         height: 50,
-        borderColor: '#ccc',
+        borderColor: '#bdc3c7',
         borderWidth: 1,
         borderRadius: 10,
         paddingHorizontal: 15,
         fontSize: 16,
         backgroundColor: '#fff',
-        marginBottom: 15,
+    },
+    title: {
+        fontSize: 32,
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        marginBottom: 20,
+    },
+    input: {
+        width: '90%',
+        height: 50,
+        borderColor: '#bdc3c7',
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 15,
+        fontSize: 16,
+        backgroundColor: '#fff',
+        marginBottom: 10,
     },
     button: {
-        backgroundColor: '#4CAF50',
+        backgroundColor: '#3498db',
         paddingVertical: 12,
         paddingHorizontal: 20,
         borderRadius: 10,
         alignItems: 'center',
-        width: '80%',
+        width: '90%',
         marginTop: 10,
     },
     buttonText: {
@@ -86,13 +119,46 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
-    registerButton: {
+    forgotPassword: {
         marginTop: 15,
     },
-    registerText: {
-        color: '#4CAF50',
+    forgotPasswordText: {
+        color: '#3498db',
         fontSize: 16,
         fontWeight: 'bold',
         textDecorationLine: 'underline',
+    },
+    stepsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    stepButton: {
+        width: 35,
+        height: 35,
+        borderRadius: 17.5,
+        backgroundColor: '#bdc3c7',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 8,
+    },
+    activeStep: {
+        backgroundColor: '#3498db',
+    },
+    stepButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    stepText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        marginBottom: 15,
+    },
+    formContainer: {
+        width: '100%',
+        alignItems: 'center',
     },
 });

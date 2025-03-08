@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, Alert, ActivityIndicator } from 'react-native';
 
 const LogIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleLogIn = () => {
         if (email && password) {
-            Alert.alert('Success', 'Log in successful!');
+            setLoading(true);
+            // Simulate a network request
+            setTimeout(() => {
+                Alert.alert('Success', 'Log in successful!');
+                setLoading(false);
+            }, 1500);
         } else {
             Alert.alert('Error', 'Please enter both email and password.');
         }
@@ -34,8 +40,12 @@ const LogIn = () => {
                 placeholderTextColor="#aaa"
             />
 
-            <Pressable style={styles.button} onPress={handleLogIn}>
-                <Text style={styles.buttonText}>Log In</Text>
+            <Pressable style={styles.button} onPress={handleLogIn} disabled={loading}>
+                {loading ? (
+                    <ActivityIndicator size="small" color="white" />
+                ) : (
+                    <Text style={styles.buttonText}>Log In</Text>
+                )}
             </Pressable>
 
             <Pressable style={styles.forgotPassword} onPress={() => Alert.alert('Reset Password', 'Redirecting...')}>
@@ -80,6 +90,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '80%',
         marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
     },
     buttonText: {
         color: 'white',

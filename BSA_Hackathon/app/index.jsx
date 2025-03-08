@@ -1,41 +1,90 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, Pressable, Image, TextInput, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Pressable, Image, TextInput, ScrollView, SafeAreaView, FlatList } from 'react-native';
 import { Link } from 'expo-router';
 import backGroundImage from "@/assets/images/back.png";
-import fiverrLogo from "@/assets/images/fiver.png"; // Assurez-vous d'avoir le logo de Fiverr dans vos assets
+import fiverrLogo from "@/assets/images/fiver.png";
 
-const App = () => {
+// Header Component
+const Header = ({ searchText, setSearchText }) => (
+  <View style={styles.header}>
+    <Image source={fiverrLogo} style={styles.logo} />
+    <View style={styles.searchContainer}>
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search..."
+        value={searchText}
+        onChangeText={setSearchText}
+      />
+    </View>
+    <Link href="/becomeSeller" asChild>
+      <Text style={styles.headerButtonText}>Become a seller</Text>
+    </Link>
+    <View style={styles.headerButtons}>
+      <Link href="/signIn" asChild>
+        <Pressable style={styles.headerButton}>
+          <Text style={styles.headerButtonText}>Sign Up</Text>
+        </Pressable>
+      </Link>
+      <Link href="/logIn" asChild>
+        <Pressable style={styles.headerButton}>
+          <Text style={styles.headerButtonText}>Log In</Text>
+        </Pressable>
+      </Link>
+    </View>
+  </View>
+);
+
+// ServiceCard Component
+const ServiceCard = ({ imageSource, username, rating, description, price, category }) => (
+  <View style={styles.serviceCard}>
+    <Image source={imageSource} style={styles.serviceImage} />
+    <View style={styles.infoContainer}>
+      <Text style={styles.username}>{username}</Text>
+      <Text style={styles.rating}>{rating}★</Text>
+    </View>
+    <Text style={styles.description} numberOfLines={2} ellipsizeMode="tail">
+      {description}
+    </Text>
+    <Text style={styles.price}>{price}</Text>
+    <Text style={styles.category}>{category}</Text>
+  </View>
+);
+
+// ContentSection Component
+const ContentSection = ({ title, text }) => (
+  <View style={styles.contentSection}>
+    <Text style={styles.sectionTitle}>{title}</Text>
+    <Text style={styles.sectionText}>{text}</Text>
+  </View>
+);
+
+// Announcements Component
+const Announcements = ({ announcements = [] }) => (
+  <FlatList
+    data={announcements}
+    renderItem={({ item }) => (
+      <ServiceCard
+        imageSource={item.imageSource}
+        username={item.username}
+        rating={item.rating}
+        description={item.description}
+        price={item.price}
+        category={item.category}
+      />
+    )}
+    keyExtractor={(item, index) => index.toString()}
+    contentContainerStyle={styles.servicesContainer}
+  />
+);
+
+// App Component
+const App = ({ externalAnnouncements = [] }) => {
   const [searchText, setSearchText] = useState('');
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Image source={fiverrLogo} style={styles.logo} />
-          <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchBar}
-              placeholder="Search..."
-              value={searchText}
-              onChangeText={setSearchText}
-            />
-          </View>
-          <Link href="/becomeSeller" asChild>
-            <Text style={styles.headerButtonText}>Become a seller</Text>
-          </Link>
-          <View style={styles.headerButtons}>
-            <Link href="/signIn" asChild>
-              <Pressable style={styles.headerButton}>
-                <Text style={styles.headerButtonText}>Sign Up</Text>
-              </Pressable>
-            </Link>
-            <Link href="/logIn" asChild>
-              <Pressable style={styles.headerButton}>
-                <Text style={styles.headerButtonText}>Log In</Text>
-              </Pressable>
-            </Link>
-          </View>
-        </View>
+        <Header searchText={searchText} setSearchText={setSearchText} />
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <ImageBackground source={backGroundImage} resizeMode="cover" style={styles.image}>
             <Link href="/menu" asChild>
@@ -43,20 +92,23 @@ const App = () => {
                 <Text style={styles.buttonText}>Fiver</Text>
               </Pressable>
             </Link>
-            <View style={styles.contentSection}>
-              <Text style={styles.sectionTitle}>About Us</Text>
-              <Text style={styles.sectionText}>Welcome to our platform. We offer a variety of services to help you achieve your goals.</Text>
-            </View>
-            <View style={styles.contentSection}>
-              <Text style={styles.sectionTitle}>Our Services</Text>
-              <Text style={styles.sectionText}>Explore our range of services designed to meet your needs. From design to development, we have you covered.</Text>
-            </View>
-            <View style={styles.contentSection}>
-              <Link href="/contact" asChild>
-                <Text style={styles.sectionTitle}>Contact Us</Text>
-              </Link>
-              <Text style={styles.sectionText}>Have questions? Feel free to reach out to our support team.</Text>
-            </View>
+            <ContentSection
+              title="Welcome to Fiver"
+              text="Your one-stop shop for all your digital needs."
+            />
+            <ContentSection
+              title="About Us"
+              text="Welcome to our platform. We offer a variety of services to help you achieve your goals."
+            />
+            <ContentSection
+              title="Our Services"
+              text="Explore our range of services designed to meet your needs. From design to development, we have you covered."
+            />
+            <ContentSection
+              title="Contact Us"
+              text="Have questions? Feel free to reach out to our support team."
+            />
+            <Announcements announcements={externalAnnouncements} />
           </ImageBackground>
         </ScrollView>
       </View>
@@ -151,7 +203,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     padding: 15,
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: 10,
+    borderRadius: 20,
     width: '85%',
   },
   sectionTitle: {
@@ -162,5 +214,61 @@ const styles = StyleSheet.create({
   sectionText: {
     fontSize: 16,
     color: 'gray',
+  },
+  serviceCard: {
+    backgroundColor: 'white',
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+    width: '90%',
+
+  },
+  serviceImage: {
+    width: '100%',
+    height: 150,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 10,
+  },
+  username: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  rating: {
+    fontSize: 16,
+    color: 'gold',
+  },
+  description: {
+    fontSize: 14,
+    color: 'gray',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  price: {
+    fontSize: 18,
+    color: 'green',
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  category: {
+    fontSize: 14,
+    color: 'gray',
+  },
+  servicesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    paddingBottom: 20,
   },
 });
