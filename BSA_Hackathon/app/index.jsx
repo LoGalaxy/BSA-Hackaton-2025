@@ -138,7 +138,7 @@ const SideBlockContainer = ({ title, items, isSocial }) => {
 // FullWidthContainer Component
 const FullWidthContainer = () => (
   <View style={styles.fullWidthContainer}>
-    <Text style={styles.fullWidthTitle}>Informations Importantes</Text>
+    <Text style={styles.fullWidthTitle}>Informations</Text>
     <View style={styles.linksContainer}>
       {['Contact Us', 'About Us', 'Security', 'Privacy Policy', 'Terms of Service'].map((item, index) => (
         <Link key={index} href={`/${item.toLowerCase().replace(' ', '')}`} asChild>
@@ -188,7 +188,7 @@ const App = ({ externalAnnouncements = [] }) => {
           <View style={styles.divider} />
           <View style={styles.horizontalBlocksContainer}>
             <SideBlockContainer title="Categories" items={['Design', 'Development', 'Marketing', 'Writing']} />
-            <SideBlockContainer title="Suivez-nous" items={['Facebook', 'Twitter', 'Instagram', 'LinkedIn']} isSocial />
+            <SideBlockContainer title="Follow Us" items={['Facebook', 'Twitter', 'Instagram', 'LinkedIn']} isSocial />
           </View>
           <FullWidthContainer />
         </ScrollView>
