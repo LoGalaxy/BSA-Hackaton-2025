@@ -4,6 +4,8 @@ import { Link } from 'expo-router';
 import backGroundImage from "@/assets/images/back.png";
 import fiverrLogo from "@/assets/images/fiver.png"; // Assurez-vous d'avoir le logo de Fiverr dans vos assets
 
+import walletConnect from "../utils/walletConnect.js";
+
 const App = () => {
   const [searchText, setSearchText] = useState('');
 
@@ -56,6 +58,9 @@ const App = () => {
                 <Text style={styles.sectionTitle}>Contact Us</Text>
               </Link>
               <Text style={styles.sectionText}>Have questions? Feel free to reach out to our support team.</Text>
+              <button onClick={connectWallet}>
+					        Connect Wallet
+				      </button>
             </View>
           </ImageBackground>
         </ScrollView>
@@ -163,4 +168,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'gray',
   },
+  
 });
+
+async function connectWallet() {
+  if (accountId !== undefined) {
+    setConnectTextSt(`Account ${accountId} is connected`);
+  } else {
+    const walletData = await walletConnect();
+    walletData[0].pairingEvent.once((pairingData) => {
+      pairingData.accountIds.forEach((id) => {
+        setAccountId(id);
+        console.log(`- Paired account id: ${id}`);
+        setConnectTextSt(`Account ${id} has been connected`);
+        setConnectLinkSt(`https://hashscan.io/#/testnet/account/${id}`);
+      });
+    });
+    setWalletData(walletData);
+    setCreateTextSt();
+  }
+}
