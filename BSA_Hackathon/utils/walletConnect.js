@@ -1,4 +1,5 @@
-import { HashConnect } from "hashconnect";
+import { HashConnect } from "@hashgraph/hashconnect";
+console.log("HashConnect:", HashConnect);
 
 async function walletConnectFcn() {
 	console.log(`\n=======================================`);
@@ -17,8 +18,10 @@ async function walletConnectFcn() {
 		icon: "https://raw.githubusercontent.com/ed-marquez/hedera-dapp-days/testing/src/assets/hederaLogo.png",
 	};
 	let hashconnect = new HashConnect();
-
+    console.log(`- HashConnect object created`, );
+    console.log(`- App metadata:`, appMetadata);
 	// First init and store the pairing private key for later (this is NOT your account private key)
+    
 	const initData = await hashconnect.init(appMetadata);
 	saveData.privateKey = initData.privKey;
 	console.log(`- Private key for pairing: ${saveData.privateKey}`);
@@ -34,7 +37,7 @@ async function walletConnectFcn() {
 	// Find any supported local wallets
 	hashconnect.findLocalWallets();
 	hashconnect.connectToLocalWallet(saveData.pairingString);
-
+    
 	return [hashconnect, saveData];
 }
 

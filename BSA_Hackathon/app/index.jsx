@@ -7,158 +7,72 @@ import instagramLogo from "@/assets/images/instagram.png";
 import linkedinLogo from "@/assets/images/linkedin.png";
 import fiverrLogo from "@/assets/images/fiver.png";
 import backGroundImage from "@/assets/images/back.png";
+import fiverrLogo from "@/assets/images/fiver.png"; // Assurez-vous d'avoir le logo de Fiverr dans vos assets
 
-// Header Component
-const Header = ({ searchText, setSearchText }) => (
-  <View style={styles.header}>
-    <Image source={fiverrLogo} style={styles.logo} />
-    <View style={styles.searchContainer}>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search..."
-        value={searchText}
-        onChangeText={setSearchText}
-      />
-    </View>
-    <Link href="/becomeSeller" asChild>
-      <Text style={styles.headerButtonText}>Become a seller</Text>
-    </Link>
-    <View style={styles.headerButtons}>
-      <Link href="/signIn" asChild>
-        <Pressable style={styles.headerButton}>
-          <Text style={styles.headerButtonText}>Sign Up</Text>
-        </Pressable>
-      </Link>
-      <Link href="/logIn" asChild>
-        <Pressable style={styles.headerButton}>
-          <Text style={styles.headerButtonText}>Log In</Text>
-        </Pressable>
-      </Link>
-    </View>
-  </View>
-);
+import walletConnect from "../utils/walletConnect.js";
 
-// ServiceCard Component
-const ServiceCard = ({ imageSource, username, rating, description, price, category }) => (
-  <View style={styles.serviceCard}>
-    <Image source={imageSource} style={styles.serviceImage} />
-    <View style={styles.infoContainer}>
-      <Text style={styles.username}>{username}</Text>
-      <Text style={styles.rating}>{rating}★</Text>
-    </View>
-    <Text style={styles.description} numberOfLines={2} ellipsizeMode="tail">
-      {description}
-    </Text>
-    <Text style={styles.price}>{price}</Text>
-    <Text style={styles.category}>{category}</Text>
-  </View>
-);
-
-// ContentSection Component
-const ContentSection = ({ title, text, link }) => (
-  <View style={styles.contentSection}>
-    {link ? (
-      <Pressable onPress={() => Linking.openURL(link)}>
-        <Text style={styles.sectionTitle}>{title}</Text>
-      </Pressable>
-    ) : (
-      <Text style={styles.sectionTitle}>{title}</Text>
-    )}
-    <Text style={styles.sectionText}>{text}</Text>
-  </View>
-);
-
-// Announcements Component
-const Announcements = ({ announcements = [] }) => (
-  <FlatList
-    data={announcements}
-    renderItem={({ item }) => (
-      <ServiceCard
-        imageSource={item.imageSource}
-        username={item.username}
-        rating={item.rating}
-        description={item.description}
-        price={item.price}
-        category={item.category}
-      />
-    )}
-    keyExtractor={(item, index) => index.toString()}
-    contentContainerStyle={styles.servicesContainer}
-  />
-);
-
-// SideBlockContainer Component
-const SideBlockContainer = ({ title, items, isSocial }) => {
-  const socialIcons = {
-    Facebook: facebookLogo,
-    Twitter: twitterLogo,
-    Instagram: instagramLogo,
-    LinkedIn: linkedinLogo,
-  };
-
-  const socialColors = {
-    Facebook: '#1877F2',
-    Twitter: '#1DA1F2',
-    Instagram: '#E4405F',
-    LinkedIn: '#0A66C2',
-  };
-
-  return (
-    <View style={styles.sideBlockContainer}>
-      <Text style={styles.blockTitle}>{title}</Text>
-      <View style={styles.blockGrid}>
-        {items.map((item, index) => (
-          <Pressable
-            key={index}
-            style={[
-              isSocial ? styles.socialItem : styles.blockItem,
-              isSocial && { borderLeftWidth: 4, borderLeftColor: socialColors[item] || '#ddd' }
-            ]}
-          >
-            {isSocial && socialIcons[item] && (
-              <Image
-                source={socialIcons[item]}
-                style={styles.socialIconImage}
-                resizeMode="contain"
-              />
-            )}
-            <Text style={[
-              styles.blockText,
-              isSocial && { color: socialColors[item] || '#333', fontWeight: 'bold' }
-            ]}>
-              {item}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
-    </View>
-  );
-};
-
-// FullWidthContainer Component
-const FullWidthContainer = () => (
-  <View style={styles.fullWidthContainer}>
-    <Text style={styles.fullWidthTitle}>Informations Importantes</Text>
-    <View style={styles.linksContainer}>
-      {['Contact Us', 'About Us', 'Security', 'Privacy Policy', 'Terms of Service'].map((item, index) => (
-        <Link key={index} href={`/${item.toLowerCase().replace(' ', '')}`} asChild>
-          <Pressable style={styles.linkItem}>
-            <Text style={styles.linkText}>{item}</Text>
-          </Pressable>
-        </Link>
-      ))}
-    </View>
-  </View>
-);
-
-// App Component
-const App = ({ externalAnnouncements = [] }) => {
+const App = () => {
   const [searchText, setSearchText] = useState('');
+
+
+  const [walletData, setWalletData] = useState();
+	const [accountId, setAccountId] = useState();
+	
+	const [connectTextSt, setConnectTextSt] = useState("Connect here...");
+	const [createTextSt, setCreateTextSt] = useState("");
+	
+
+	const [connectLinkSt, setConnectLinkSt] = useState("");
+
+  async function connectWallet() {
+
+    if (accountId !== undefined) {
+      setConnectTextSt(`Account ${accountId} is connected`);
+    } else {
+      const walletData = await walletConnect();
+      walletData[0].pairingEvent.once((pairingData) => {
+        pairingData.accountIds.forEach((id) => {
+          setAccountId(id);
+          console.log(`- Paired account id: ${id}`);
+          setConnectTextSt(`Account ${id} has been connected`);
+          setConnectLinkSt(`https://hashscan.io/#/testnet/account/${id}`);
+        });
+      });
+      console.log(`- Wallet data:`, walletData);
+      setWalletData(walletData);
+      setCreateTextSt();
+    }
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Header searchText={searchText} setSearchText={setSearchText} />
+        <View style={styles.header}>
+          <Image source={fiverrLogo} style={styles.logo} />
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.searchBar}
+              placeholder="Search..."
+              value={searchText}
+              onChangeText={setSearchText}
+            />
+          </View>
+          <Link href="/becomeSeller" asChild>
+            <Text style={styles.headerButtonText}>Become a seller</Text>
+          </Link>
+          <View style={styles.headerButtons}>
+            <Link href="/signIn" asChild>
+              <Pressable style={styles.headerButton}>
+                <Text style={styles.headerButtonText}>Sign Up</Text>
+              </Pressable>
+            </Link>
+            <Link href="/logIn" asChild>
+              <Pressable style={styles.headerButton}>
+                <Text style={styles.headerButtonText}>Log In</Text>
+              </Pressable>
+            </Link>
+          </View>
+        </View>
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <ImageBackground source={backGroundImage} resizeMode="cover" style={styles.backgroundContainer}>
             <Link href="/menu" asChild>
@@ -195,6 +109,7 @@ const App = ({ externalAnnouncements = [] }) => {
       </View>
     </SafeAreaView>
   );
+
 };
 
 export default App;
@@ -302,178 +217,5 @@ const styles = StyleSheet.create({
   sectionText: {
     fontSize: 16,
     color: 'gray',
-  },
-  serviceCard: {
-    backgroundColor: 'white',
-    padding: 15,
-    marginVertical: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
-    width: '90%',
-  },
-  serviceImage: {
-    width: '100%',
-    height: 150,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  infoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 10,
-  },
-  username: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  rating: {
-    fontSize: 16,
-    color: 'gold',
-  },
-  description: {
-    fontSize: 14,
-    color: 'gray',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  price: {
-    fontSize: 18,
-    color: 'green',
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  category: {
-    fontSize: 14,
-    color: 'gray',
-  },
-  servicesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    paddingBottom: 20,
-  },
-  divider: {
-    height: 1,
-    width: '90%',
-    backgroundColor: '#ddd',
-    marginVertical: 15,
-  },
-  horizontalBlocksContainer: {
-    width: '90%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  sideBlockContainer: {
-    width: '48%',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 15,
-    borderWidth: 1,
-    borderColor: '#eaeaea',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
-    elevation: 2,
-  },
-  blockGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  blockItem: {
-    width: '100%',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 10,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
-  blockText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
-    margin: 5,
-  },
-  blockTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  socialIconImage: {
-    width: 28,
-    height: 28,
-    marginRight: 12,
-    borderRadius: 6,
-    backgroundColor: 'white',
-    padding: 4,
-  },
-  socialItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f8f8f8',
-    borderRadius: 8,
-    padding: 10,
-    marginVertical: 5,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-    width: '100%',
-  },
-  fullWidthContainer: {
-    width: '90%',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 15,
-    marginTop: 20,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#eaeaea',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
-    elevation: 2,
-  },
-  fullWidthTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  linksContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
-  linkItem: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    padding: 10,
-    margin: 6,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    minWidth: 120,
-    alignItems: 'center',
-  },
-  linkText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#333',
   },
 });
