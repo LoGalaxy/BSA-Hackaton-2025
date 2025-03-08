@@ -25,22 +25,21 @@ async function getPostingInfo(contractId, postingIndex) {
     // Parse the response from the contract:
     // The Solidity function returns (string name, address poster, uint256 price).
     const name = result.getString(0);
-    const poster = result.getAddress(1);
+    const poster = result.getString(1);
     const price = result.getUint256(2);
 
+    client.close();
     return { name, poster, price };
 }
 
 // Example usage:
-/*
-(async () => {
-    const contractId = "0.0.5673398"; // Replace with your deployed contract's ID.
-    const postingIndex = 0;        // For example, retrieve the first posting.
+/*(async () => {
+    const contractId = "0.0.5673584"; // Replace with your deployed contract's ID.
+    const postingIndex = 1;        // For example, retrieve the first posting.
     try {
         const posting = await getPostingInfo(ContractId.fromString(contractId), postingIndex);
         console.log("Posting Details:", posting);
     } catch (error) {
         console.error("Error retrieving posting:", error);
     }
-})();
-*/
+})();*/

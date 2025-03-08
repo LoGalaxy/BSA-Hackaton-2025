@@ -104,6 +104,7 @@ async function deploySmartContract() {
     const contractName = await contractQueryName.execute(client);
     console.log('Got name: ' + contractName.getString(0));*/
 
+    client.close();
     process.exit(0);
 }
 

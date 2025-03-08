@@ -15,6 +15,7 @@ async function addPosting(contractId, name, price) {
             "addPosting",
             new ContractFunctionParameters()
                 .addString(name)
+                .addString(accountId)
                 .addUint256(price)
         );
 
@@ -34,7 +35,9 @@ async function addPosting(contractId, name, price) {
     const newIndex = record.contractFunctionResult.getUint256(0);
 
     console.log("Posting successfully added at index:", newIndex);
+
+    client.close();
     return newIndex;
 }
 
-// addPosting(ContractId.fromString("0.0.5673444"), "Freelance Web Dev", 1000);
+//addPosting(ContractId.fromString("0.0.5673584"), "small job", 2);
