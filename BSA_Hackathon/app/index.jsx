@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Pressable, Image, TextInput, ScrollView, SafeAreaView, FlatList, Linking } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import facebookLogo from "@/assets/images/facebook.png";
 import twitterLogo from "@/assets/images/twitter.png";
 import instagramLogo from "@/assets/images/instagram.png";
 import linkedinLogo from "@/assets/images/linkedin.png";
 import fiverrLogo from "@/assets/images/fiver.png";
 import backGroundImage from "@/assets/images/back.png";
+import { SAMPLE_ANNOUNCEMENTS, CategoryBlock } from './annonce'; // Import your new component and data
 
 // Header Component
-const Header = ({ searchText, setSearchText }) => (
+const Header = ({ searchText, setSearchText, onSearch }) => (
   <View style={styles.header}>
     <Image source={fiverrLogo} style={styles.logo} />
     <View style={styles.searchContainer}>
@@ -18,14 +19,14 @@ const Header = ({ searchText, setSearchText }) => (
         placeholder="Search..."
         value={searchText}
         onChangeText={setSearchText}
+        onSubmitEditing={onSearch}
       />
     </View>
-    <Link href="/becomeSeller" asChild>
-      <Text style={styles.headerButtonText}>Become a seller</Text>
+    <Link href="/createContent" asChild>
+      <Text style={styles.headerButtonText}>Create content</Text>
     </Link>
     <View style={styles.headerButtons}>
-      <HeaderButton href="/signIn" text="Sign Up" />
-      <HeaderButton href="/logIn" text="Log In" />
+      <HeaderButton href="/connect" text="Connect" />
     </View>
   </View>
 );
@@ -73,10 +74,14 @@ const ContentSection = ({ title, text, link }) => (
 
 // Announcements Component
 const Announcements = ({ announcements = [] }) => (
-  <FlatList
-    data={announcements}
-    renderItem={({ item }) => (
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    contentContainerStyle={styles.servicesContainer}
+  >
+    {announcements.map((item, index) => (
       <ServiceCard
+        key={index}
         imageSource={item.imageSource}
         username={item.username}
         rating={item.rating}
@@ -84,53 +89,39 @@ const Announcements = ({ announcements = [] }) => (
         price={item.price}
         category={item.category}
       />
-    )}
-    keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
-    contentContainerStyle={styles.servicesContainer}
-  />
+    ))}
+  </ScrollView>
 );
 
-// SideBlockContainer Component
-const SideBlockContainer = ({ title, items, isSocial }) => {
-  const socialIcons = {
-    Facebook: facebookLogo,
-    Twitter: twitterLogo,
-    Instagram: instagramLogo,
-    LinkedIn: linkedinLogo,
-  };
-
-  const socialColors = {
-    Facebook: '#1877F2',
-    Twitter: '#1DA1F2',
-    Instagram: '#E4405F',
-    LinkedIn: '#0A66C2',
-  };
+// SocialMediaBlock Component
+const SocialMediaBlock = () => {
+  const socialItems = [
+    { name: 'Facebook', icon: facebookLogo, color: '#1877F2', url: 'https://facebook.com' },
+    { name: 'Twitter', icon: twitterLogo, color: '#1DA1F2', url: 'https://twitter.com' },
+    { name: 'Instagram', icon: instagramLogo, color: '#E4405F', url: 'https://instagram.com' },
+    { name: 'LinkedIn', icon: linkedinLogo, color: '#0A66C2', url: 'https://linkedin.com' },
+  ];
 
   return (
     <View style={styles.sideBlockContainer}>
-      <Text style={styles.blockTitle}>{title}</Text>
+      <Text style={styles.blockTitle}>Suivez-nous</Text>
       <View style={styles.blockGrid}>
-        {items.map((item, index) => (
+        {socialItems.map((item, index) => (
           <Pressable
             key={index}
             style={[
-              styles.blockItem,
-              isSocial && styles.socialItem,
-              isSocial && { borderLeftColor: socialColors[item] || '#ddd' }
+              styles.socialBlockItem,
+              { borderLeftColor: item.color }
             ]}
+            onPress={() => Linking.openURL(item.url)}
           >
-            {isSocial && socialIcons[item] && (
-              <Image
-                source={socialIcons[item]}
-                style={styles.socialIconImage}
-                resizeMode="contain"
-              />
-            )}
-            <Text style={[
-              styles.blockText,
-              isSocial && { color: socialColors[item] || '#333', fontWeight: 'bold' }
-            ]}>
-              {item}
+            <Image
+              source={item.icon}
+              style={styles.socialIconImage}
+              resizeMode="contain"
+            />
+            <Text style={[styles.blockText, { color: item.color, fontWeight: 'bold' }]}>
+              {item.name}
             </Text>
           </Pressable>
         ))}
@@ -176,20 +167,38 @@ const FullWidthContainer = () => {
 };
 
 // App Component
-const App = ({ externalAnnouncements = [] }) => {
+const App = () => {
   const [searchText, setSearchText] = useState('');
+  const router = useRouter();
+
+  const handleSearch = () => {
+    if (searchText) {
+      router.push({
+        pathname: '/annonce',
+        params: { category: searchText }
+      });
+    }
+  };
+
+  // Trier les annonces par popularité (note décroissante)
+  const sortedAnnouncements = [...SAMPLE_ANNOUNCEMENTS]
+    .filter(annonce => typeof annonce.rating === 'number') // Filtrer les annonces avec un rating valide
+    .sort((a, b) => b.rating - a.rating);
+
+  // Obtenir les trois annonces les plus populaires
+  const topAnnouncements = sortedAnnouncements.slice(0, 5);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Header searchText={searchText} setSearchText={setSearchText} />
+        <Header searchText={searchText} setSearchText={setSearchText} onSearch={handleSearch} />
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <ImageBackground source={backGroundImage} resizeMode="cover" style={styles.imageBackground}>
-            <Link href="/menu" asChild>
-              <Pressable style={styles.button}>
-                <Text style={styles.buttonText}>Fiver</Text>
-              </Pressable>
-            </Link>
+            {topAnnouncements.length > 0 ? (
+              <Announcements announcements={topAnnouncements} />
+            ) : (
+              <Text>No announcements available.</Text>
+            )}
             <ContentSection
               title="Welcome to Fiver"
               text="Your one-stop shop for all your digital needs."
@@ -207,12 +216,11 @@ const App = ({ externalAnnouncements = [] }) => {
               text="Have questions? Feel free to reach out to our support team."
               link="mailto:support@example.com"
             />
-            <Announcements announcements={externalAnnouncements} />
           </ImageBackground>
           <View style={styles.divider} />
           <View style={styles.horizontalBlocksContainer}>
-            <SideBlockContainer title="Categories" items={['Design', 'Development', 'Marketing', 'Writing']} />
-            <SideBlockContainer title="Follow Us" items={['Facebook', 'Twitter', 'Instagram', 'LinkedIn']} isSocial />
+            <CategoryBlock title="Categories" items={['Design', 'Development', 'Marketing', 'Writing']} />
+            <SocialMediaBlock />
           </View>
           <FullWidthContainer />
         </ScrollView>
@@ -343,7 +351,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 15,
     marginVertical: 10,
-    width: '90%',
+    marginHorizontal: 5,
+    width: 200, // Adjusted width for horizontal layout
     alignSelf: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -387,6 +396,7 @@ const styles = StyleSheet.create({
   },
   servicesContainer: {
     paddingVertical: 20,
+    flexDirection: 'row', // Align items horizontally
   },
   sideBlockContainer: {
     marginVertical: 20,
@@ -508,5 +518,26 @@ const styles = StyleSheet.create({
     width: '100%',
     alignContent: 'center',
     alignSelf: 'center',
+  },
+  socialBlockItem: {
+    flexDirection: 'row',
+    width: '150%',
+    padding: 12,
+    marginBottom: 10,
+    backgroundColor: '#f8f8f8',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+    borderLeftWidth: 4,
+  },
+  socialIconImage: {
+    width: 28,
+    height: 28,
+    marginRight: 12,
   },
 });
