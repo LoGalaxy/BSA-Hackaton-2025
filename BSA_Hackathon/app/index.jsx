@@ -22,7 +22,7 @@ const Header = ({ searchText, setSearchText, onSearch }) => (
         onSubmitEditing={onSearch}
       />
     </View>
-    <Link href="/becomeSeller" asChild>
+    <Link href="/createContent" asChild>
       <Text style={styles.headerButtonText}>Create content</Text>
     </Link>
     <View style={styles.headerButtons}>
@@ -199,11 +199,6 @@ const App = () => {
             ) : (
               <Text>No announcements available.</Text>
             )}
-            <Link href="/menu" asChild>
-              <Pressable style={styles.button}>
-                <Text style={styles.buttonText}>Fiver</Text>
-              </Pressable>
-            </Link>
             <ContentSection
               title="Welcome to Fiver"
               text="Your one-stop shop for all your digital needs."
