@@ -1,4 +1,4 @@
-const { Client, ContractExecuteTransaction, ContractFunctionParameters, Hbar, ContractId, PrivateKey} = require("@hashgraph/sdk");
+const { Client, ContractExecuteTransaction, ContractFunctionParameters, Hbar, ContractId, PrivateKey } = require("@hashgraph/sdk");
 require('dotenv').config();
 
 async function addPosting(contractId, name, price) {
