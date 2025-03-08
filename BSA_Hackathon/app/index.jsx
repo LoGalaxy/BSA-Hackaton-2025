@@ -366,3 +366,21 @@ const styles = StyleSheet.create({
     color: '#333',
   },
 });
+
+async function connectWallet() {
+  if (accountId !== undefined) {
+    setConnectTextSt(`Account ${accountId} is connected`);
+  } else {
+    const walletData = await walletConnect();
+    walletData[0].pairingEvent.once((pairingData) => {
+      pairingData.accountIds.forEach((id) => {
+        setAccountId(id);
+        console.log(`- Paired account id: ${id}`);
+        setConnectTextSt(`Account ${id} has been connected`);
+        setConnectLinkSt(`https://hashscan.io/#/testnet/account/${id}`);
+      });
+    });
+    setWalletData(walletData);
+    setCreateTextSt();
+  }
+}
