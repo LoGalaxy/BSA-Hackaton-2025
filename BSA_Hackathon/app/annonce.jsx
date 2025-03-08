@@ -49,6 +49,34 @@ export const SAMPLE_ANNOUNCEMENTS = [
         price: 'From $30',
         category: 'Writing'
     },
+    {
+        id: '6',
+        imageSource: require('@/assets/images/service.png'),
+        username: 'contentwriter',
+        rating: 4.6,
+        description: 'I will write SEO-optimized blog articles for your website',
+        price: 'From $30',
+        category: 'Writing'
+    },
+    {
+        id: '7',
+        imageSource: require('@/assets/images/service.png'),
+        username: 'contentwriter',
+        rating: 4.6,
+        description: 'I will write SEO-optimized blog articles for your website',
+        price: 'From $30',
+        category: 'Writing'
+    },
+    {
+        id: '8',
+        imageSource: require('@/assets/images/service.png'),
+        username: 'contentwriter',
+        rating: 4.6,
+        description: 'I will write SEO-optimized blog articles for your website',
+        price: 'From $30',
+        category: 'Writing',
+    }
+
     // Add more sample announcements as needed
 ];
 
