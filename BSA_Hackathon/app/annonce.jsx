@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Pressable, Image, SafeAreaView, FlatList, Dimen
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 // Sample data - replace with your actual data source
-const SAMPLE_ANNOUNCEMENTS = [
+export const SAMPLE_ANNOUNCEMENTS = [
     {
         id: '1',
         imageSource: require('@/assets/images/service.png'),

@@ -7,8 +7,7 @@ import instagramLogo from "@/assets/images/instagram.png";
 import linkedinLogo from "@/assets/images/linkedin.png";
 import fiverrLogo from "@/assets/images/fiver.png";
 import backGroundImage from "@/assets/images/back.png";
-
-import { CategoryBlock } from './annonce'; // Import your new component
+import { SAMPLE_ANNOUNCEMENTS, CategoryBlock } from './annonce'; // Import your new component and data
 
 // Header Component
 const Header = ({ searchText, setSearchText, onSearch }) => (
@@ -179,7 +178,7 @@ const FullWidthContainer = () => {
 };
 
 // App Component
-const App = ({ externalAnnouncements = [] }) => {
+const App = () => {
   const [searchText, setSearchText] = useState('');
   const router = useRouter();
 
@@ -192,32 +191,11 @@ const App = ({ externalAnnouncements = [] }) => {
     }
   };
 
-  const Announcements = ({ announcements = [] }) => {
-    // Tri des annonces par rating (du plus élevé au plus bas)
-    const sortedAnnouncements = [...announcements].sort((a, b) => b.rating - a.rating);
-
-    return (
-      <FlatList
-        data={sortedAnnouncements}
-        renderItem={({ item }) => (
-          <ServiceCard
-            imageSource={item.imageSource}
-            username={item.username}
-            rating={item.rating}
-            description={item.description}
-            price={item.price}
-            category={item.category}
-          />
-        )}
-        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
-        contentContainerStyle={styles.servicesContainer}
-      />
-    );
-  };
   // Trier les annonces par popularité (note décroissante)
-  const sortedAnnouncements = [...externalAnnouncements]
+  const sortedAnnouncements = [...SAMPLE_ANNOUNCEMENTS]
     .filter(annonce => typeof annonce.rating === 'number') // Filtrer les annonces avec un rating valide
     .sort((a, b) => b.rating - a.rating);
+
   // Obtenir les trois annonces les plus populaires
   const topAnnouncements = sortedAnnouncements.slice(0, 3);
 
@@ -254,7 +232,6 @@ const App = ({ externalAnnouncements = [] }) => {
               text="Have questions? Feel free to reach out to our support team."
               link="mailto:support@example.com"
             />
-            <Announcements announcements={topAnnouncements} />
           </ImageBackground>
           <View style={styles.divider} />
           <View style={styles.horizontalBlocksContainer}>
