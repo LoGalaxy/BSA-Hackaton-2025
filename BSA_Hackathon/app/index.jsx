@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Pressable, Image, TextInput, ScrollView, SafeAreaView, FlatList, Linking } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import facebookLogo from "@/assets/images/facebook.png";
 import twitterLogo from "@/assets/images/twitter.png";
 import instagramLogo from "@/assets/images/instagram.png";
@@ -8,8 +8,10 @@ import linkedinLogo from "@/assets/images/linkedin.png";
 import fiverrLogo from "@/assets/images/fiver.png";
 import backGroundImage from "@/assets/images/back.png";
 
+import { CategoryBlock } from './annonce'; // Import your new component
+
 // Header Component
-const Header = ({ searchText, setSearchText }) => (
+const Header = ({ searchText, setSearchText, onSearch }) => (
   <View style={styles.header}>
     <Image source={fiverrLogo} style={styles.logo} />
     <View style={styles.searchContainer}>
@@ -18,6 +20,7 @@ const Header = ({ searchText, setSearchText }) => (
         placeholder="Search..."
         value={searchText}
         onChangeText={setSearchText}
+        onSubmitEditing={onSearch}
       />
     </View>
     <Link href="/becomeSeller" asChild>
@@ -178,13 +181,57 @@ const FullWidthContainer = () => {
 // App Component
 const App = ({ externalAnnouncements = [] }) => {
   const [searchText, setSearchText] = useState('');
+  const router = useRouter();
+
+  const handleSearch = () => {
+    if (searchText) {
+      router.push({
+        pathname: '/annonce',
+        params: { category: searchText }
+      });
+    }
+  };
+
+  const Announcements = ({ announcements = [] }) => {
+    // Tri des annonces par rating (du plus élevé au plus bas)
+    const sortedAnnouncements = [...announcements].sort((a, b) => b.rating - a.rating);
+
+    return (
+      <FlatList
+        data={sortedAnnouncements}
+        renderItem={({ item }) => (
+          <ServiceCard
+            imageSource={item.imageSource}
+            username={item.username}
+            rating={item.rating}
+            description={item.description}
+            price={item.price}
+            category={item.category}
+          />
+        )}
+        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
+        contentContainerStyle={styles.servicesContainer}
+      />
+    );
+  };
+  // Trier les annonces par popularité (note décroissante)
+  const sortedAnnouncements = [...externalAnnouncements]
+    .filter(annonce => typeof annonce.rating === 'number') // Filtrer les annonces avec un rating valide
+    .sort((a, b) => b.rating - a.rating);
+  // Obtenir les trois annonces les plus populaires
+  const topAnnouncements = sortedAnnouncements.slice(0, 3);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Header searchText={searchText} setSearchText={setSearchText} />
+        <Header searchText={searchText} setSearchText={setSearchText} onSearch={handleSearch} />
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <ImageBackground source={backGroundImage} resizeMode="cover" style={styles.imageBackground}>
+            {topAnnouncements.length > 0 ? (
+              <Announcements announcements={topAnnouncements} />
+            ) : (
+              <Text>No announcements available.</Text>
+            )}
             <Link href="/menu" asChild>
               <Pressable style={styles.button}>
                 <Text style={styles.buttonText}>Fiver</Text>
@@ -207,12 +254,12 @@ const App = ({ externalAnnouncements = [] }) => {
               text="Have questions? Feel free to reach out to our support team."
               link="mailto:support@example.com"
             />
-            <Announcements announcements={externalAnnouncements} />
+            <Announcements announcements={topAnnouncements} />
           </ImageBackground>
           <View style={styles.divider} />
           <View style={styles.horizontalBlocksContainer}>
-            <SideBlockContainer title="Categories" items={['Design', 'Development', 'Marketing', 'Writing']} />
-            <SideBlockContainer title="Follow Us" items={['Facebook', 'Twitter', 'Instagram', 'LinkedIn']} isSocial />
+            <CategoryBlock title="Categories" items={['Design', 'Development', 'Marketing', 'Writing']} />
+            <CategoryBlock title="Follow Us" items={['Facebook', 'Twitter', 'Instagram', 'LinkedIn']} isSocial />
           </View>
           <FullWidthContainer />
         </ScrollView>
