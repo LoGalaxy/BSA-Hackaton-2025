@@ -23,11 +23,10 @@ const Header = ({ searchText, setSearchText, onSearch }) => (
       />
     </View>
     <Link href="/becomeSeller" asChild>
-      <Text style={styles.headerButtonText}>Become a seller</Text>
+      <Text style={styles.headerButtonText}>Create content</Text>
     </Link>
     <View style={styles.headerButtons}>
-      <HeaderButton href="/signIn" text="Sign Up" />
-      <HeaderButton href="/logIn" text="Log In" />
+      <HeaderButton href="/connect" text="Connect" />
     </View>
   </View>
 );
