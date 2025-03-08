@@ -75,10 +75,14 @@ const ContentSection = ({ title, text, link }) => (
 
 // Announcements Component
 const Announcements = ({ announcements = [] }) => (
-  <FlatList
-    data={announcements}
-    renderItem={({ item }) => (
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    contentContainerStyle={styles.servicesContainer}
+  >
+    {announcements.map((item, index) => (
       <ServiceCard
+        key={index}
         imageSource={item.imageSource}
         username={item.username}
         rating={item.rating}
@@ -86,10 +90,8 @@ const Announcements = ({ announcements = [] }) => (
         price={item.price}
         category={item.category}
       />
-    )}
-    keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
-    contentContainerStyle={styles.servicesContainer}
-  />
+    ))}
+  </ScrollView>
 );
 
 // SocialMediaBlock Component
@@ -185,7 +187,7 @@ const App = () => {
     .sort((a, b) => b.rating - a.rating);
 
   // Obtenir les trois annonces les plus populaires
-  const topAnnouncements = sortedAnnouncements.slice(0, 3);
+  const topAnnouncements = sortedAnnouncements.slice(0, 5);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -355,7 +357,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 15,
     marginVertical: 10,
-    width: '90%',
+    marginHorizontal: 5,
+    width: 200, // Adjusted width for horizontal layout
     alignSelf: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -399,6 +402,7 @@ const styles = StyleSheet.create({
   },
   servicesContainer: {
     paddingVertical: 20,
+    flexDirection: 'row', // Align items horizontally
   },
   sideBlockContainer: {
     marginVertical: 20,
