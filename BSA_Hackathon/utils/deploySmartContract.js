@@ -4,6 +4,7 @@ const {
     ContractCallQuery,
     ContractExecuteTransaction,
     ContractFunctionParameters,
+    DelegateContractId,
     Hbar,
     PrivateKey
 } = require('@hashgraph/sdk');
@@ -34,7 +35,7 @@ async function deploySmartContract() {
                             DEPLOY CONTRACT
     //////////////////////////////////////////////////////////////*/
 
-    let storage = require('./Storage.json');
+    let storage = require('./Postings.json');
     const bytecode = storage.data.bytecode.object;
 
     // Create the contract on Hedera Testnet
@@ -64,33 +65,44 @@ async function deploySmartContract() {
     //////////////////////////////////////////////////////////////*/
 
     // Add funds to the piggy bank -> calls a function on the smart contract
+    /*
     const contractAddNameTx = await new ContractExecuteTransaction()
         .setContractId(contractId)
         .setGas(1000000)
-        .setFunction('setName', new ContractFunctionParameters().addString("hello world"));
+        .setFunction('setName', new ContractFunctionParameters().addString("test test"));
+     */
 
     // Submit the transaction to the Hedera testnet and store the response
+    /*
     console.log('Adding name');
     const submitTx = await contractAddNameTx.execute(client);
 
+     */
+
     // Get the receipt of the transaction
+    /*
     console.log('Getting the receipt of the transaction...');
     const receipt = await submitTx.getReceipt(client);
+     */
 
     // Confirm the transaction was executed successfully
+    /*
     console.log('The transaction status is: ' + receipt.status.toString());
     console.log('\n');
+     */
 
     // Query the contract to get the updated funds
+    /*
     const contractQueryName = new ContractCallQuery()
         .setContractId(contractId)
         .setGas(1000000)
         .setFunction('getName', new ContractFunctionParameters().addUint8(0));
+     */
 
     // Submit the transaction to the Hedera testnet and get the new saved amount
-    console.log('Executing query transaction...');
+    /*console.log('Executing query transaction...');
     const contractName = await contractQueryName.execute(client);
-    console.log('Got name: ' + contractName.getString(0));
+    console.log('Got name: ' + contractName.getString(0));*/
 
     process.exit(0);
 }
