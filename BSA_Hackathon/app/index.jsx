@@ -27,7 +27,9 @@ const Header = ({ searchText, setSearchText, onSearch }) => (
       <Text style={styles.headerButtonText}>Create content</Text>
     </Link>
     <View style={styles.headerButtons}>
-      <Button onPress={walletConnect}></Button>
+      <Pressable onPress={walletConnect}>
+        <Text style={styles.headerButtonText}>Connect Wallet</Text>
+      </Pressable>
     </View>
   </View>
 );
@@ -194,12 +196,12 @@ const App = () => {
       <View style={styles.container}>
         <Header searchText={searchText} setSearchText={setSearchText} onSearch={handleSearch} />
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
-            {topAnnouncements.length > 0 ? (
-              <Announcements announcements={topAnnouncements} />
-            ) : (
-              <Text>No announcements available.</Text>
-            )}
-      
+          {topAnnouncements.length > 0 ? (
+            <Announcements announcements={topAnnouncements} />
+          ) : (
+            <Text>No announcements available.</Text>
+          )}
+
 
           <View style={styles.divider} />
           <View style={styles.horizontalBlocksContainer}>
@@ -238,6 +240,14 @@ const styles = StyleSheet.create({
     height: 80,
     resizeMode: 'contain',
   },
+  buttonPress: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.8)',
+  },
   headerButtons: {
     flexDirection: 'row',
   },
@@ -248,6 +258,7 @@ const styles = StyleSheet.create({
     color: '#22780f',
     fontSize: 16,
     fontWeight: 'bold',
+    marginLeft: 15,
   },
   scrollViewContent: {
     flexGrow: 1,

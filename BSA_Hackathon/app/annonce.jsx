@@ -6,7 +6,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 export const SAMPLE_ANNOUNCEMENTS = [
     {
         id: '1',
-        imageSource: require('@/assets/images/service.png'),
+        imageSource: require('@/assets/images/design.jpg'),
         username: 'designer123',
         rating: 4.9,
         description: 'I will create a professional logo design for your business',
@@ -15,7 +15,7 @@ export const SAMPLE_ANNOUNCEMENTS = [
     },
     {
         id: '2',
-        imageSource: require('@/assets/images/service.png'),
+        imageSource: require('@/assets/images/codng.jpg'),
         username: 'webdev_pro',
         rating: 4.8,
         description: 'I will develop a responsive website using React',
@@ -24,7 +24,7 @@ export const SAMPLE_ANNOUNCEMENTS = [
     },
     {
         id: '3',
-        imageSource: require('@/assets/images/service.png'),
+        imageSource: require('@/assets/images/serviceee.jpg'),
         username: 'marketingexpert',
         rating: 4.7,
         description: 'I will create and manage your social media campaigns',
@@ -33,7 +33,7 @@ export const SAMPLE_ANNOUNCEMENTS = [
     },
     {
         id: '4',
-        imageSource: require('@/assets/images/service.png'),
+        imageSource: require('@/assets/images/codeing.jpg'),
         username: 'contentwriter',
         rating: 4.6,
         description: 'I will write SEO-optimized blog articles for your website',
@@ -42,7 +42,7 @@ export const SAMPLE_ANNOUNCEMENTS = [
     },
     {
         id: '5',
-        imageSource: require('@/assets/images/service.png'),
+        imageSource: require('@/assets/images/codeing.jpg'),
         username: 'contentwriter',
         rating: 4.6,
         description: 'I will write SEO-optimized blog articles for your website',
