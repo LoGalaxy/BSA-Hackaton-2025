@@ -9,6 +9,8 @@ import fiverrLogo from "@/assets/images/fiver.png";
 import backGroundImage from "@/assets/images/back.png";
 import { SAMPLE_ANNOUNCEMENTS, CategoryBlock } from './annonce'; // Import your new component and data
 import walletConnect from '@/utils/walletConnect';
+import { Footer } from "@/components/footer/Footer";
+
 
 // Header Component
 const Header = ({ searchText, setSearchText, onSearch }) => (
@@ -196,6 +198,7 @@ const App = () => {
       <View style={styles.container}>
         <Header searchText={searchText} setSearchText={setSearchText} onSearch={handleSearch} />
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <Text style={styles.sectionTitle}><u>Most Popular</u></Text>
           {topAnnouncements.length > 0 ? (
             <Announcements announcements={topAnnouncements} />
           ) : (
@@ -209,6 +212,7 @@ const App = () => {
             <SocialMediaBlock />
           </View>
           <FullWidthContainer />
+          <Footer />
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -225,6 +229,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+    width: '100%',
   },
   header: {
     flexDirection: 'row',
@@ -265,6 +270,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 20,
+    width: '100%',
   },
   imageBackground: {
     width: '100%',
@@ -331,10 +337,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
+    color: 'gold',
+    fontWeight: 'bold',
   },
   sectionText: {
     fontSize: 16,
