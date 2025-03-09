@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable, Alert, Image, FlatList } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
+
 const BecomeSeller = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -20,7 +21,6 @@ const BecomeSeller = () => {
             };
             setAnnonces([...annonces, newAnnonce]); // Ajoute l'annonce au tableau
             Alert.alert('Succès', 'Votre annonce a été créée avec succès!');
-
             // Réinitialiser les champs
             setTitle('');
             setDescription('');
@@ -33,7 +33,7 @@ const BecomeSeller = () => {
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ImagePicker.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
