@@ -40,4 +40,4 @@ async function addPosting(contractId, name, price) {
     return newIndex;
 }
 
-//addPosting(ContractId.fromString("0.0.5673584"), "small job", 2);
+// addPosting(ContractId.fromString("0.0.5673584"), "sheesh job", 5);

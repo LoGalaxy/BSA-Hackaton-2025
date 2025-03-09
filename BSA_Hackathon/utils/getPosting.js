@@ -33,13 +33,13 @@ async function getPostingInfo(contractId, postingIndex) {
 }
 
 // Example usage:
-/*(async () => {
+(async () => {
     const contractId = "0.0.5673584"; // Replace with your deployed contract's ID.
     const postingIndex = 1;        // For example, retrieve the first posting.
     try {
-        const posting = await getPostingInfo(ContractId.fromString(contractId), postingIndex);
+        const posting = await getPostingInfo(ContractId.fromString("0.0.5673584"), 3);
         console.log("Posting Details:", posting);
     } catch (error) {
         console.error("Error retrieving posting:", error);
     }
-})();*/
+})();
