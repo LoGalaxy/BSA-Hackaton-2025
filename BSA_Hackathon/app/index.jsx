@@ -193,30 +193,13 @@ const App = () => {
       <View style={styles.container}>
         <Header searchText={searchText} setSearchText={setSearchText} onSearch={handleSearch} />
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
-          <ImageBackground source={backGroundImage} resizeMode="cover" style={styles.imageBackground}>
             {topAnnouncements.length > 0 ? (
               <Announcements announcements={topAnnouncements} />
             ) : (
               <Text>No announcements available.</Text>
             )}
-            <ContentSection
-              title="Welcome to Fiver"
-              text="Your one-stop shop for all your digital needs."
-            />
-            <ContentSection
-              title="About Us"
-              text="We offer a variety of services to help you achieve your goals."
-            />
-            <ContentSection
-              title="Our Services"
-              text="Explore our range of services designed to meet your needs. From design to development, we have you covered."
-            />
-            <ContentSection
-              title="Contact Us"
-              text="Have questions? Feel free to reach out to our support team."
-              link="mailto:support@example.com"
-            />
-          </ImageBackground>
+      
+
           <View style={styles.divider} />
           <View style={styles.horizontalBlocksContainer}>
             <CategoryBlock title="Categories" items={['Design', 'Development', 'Marketing', 'Writing']} />
@@ -250,8 +233,8 @@ const styles = StyleSheet.create({
     borderBottomColor: '#e0e0e0',
   },
   logo: {
-    width: 120,
-    height: 40,
+    width: 240,
+    height: 80,
     resizeMode: 'contain',
   },
   headerButtons: {
