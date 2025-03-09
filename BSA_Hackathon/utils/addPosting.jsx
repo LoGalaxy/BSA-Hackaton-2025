@@ -37,7 +37,6 @@ async function addPosting(contractId, name, price) {
     console.log("Posting successfully added at index:", newIndex);
 
     client.close();
+    console.log("t'es good bogoss");
     return newIndex;
 }
-
-//addPosting(ContractId.fromString("0.0.5673584"), "small job", 2);
