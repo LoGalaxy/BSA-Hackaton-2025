@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, Pressable, Image, TextInput, ScrollView, SafeAreaView, FlatList, Linking } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Pressable, Image, TextInput, ScrollView, SafeAreaView, FlatList, Linking, Button } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import facebookLogo from "@/assets/images/facebook.png";
 import twitterLogo from "@/assets/images/twitter.png";
@@ -8,6 +8,7 @@ import linkedinLogo from "@/assets/images/linkedin.png";
 import fiverrLogo from "@/assets/images/fiver.png";
 import backGroundImage from "@/assets/images/back.png";
 import { SAMPLE_ANNOUNCEMENTS, CategoryBlock } from './annonce'; // Import your new component and data
+import walletConnect from '@/utils/walletConnect';
 
 // Header Component
 const Header = ({ searchText, setSearchText, onSearch }) => (
@@ -26,7 +27,7 @@ const Header = ({ searchText, setSearchText, onSearch }) => (
       <Text style={styles.headerButtonText}>Create content</Text>
     </Link>
     <View style={styles.headerButtons}>
-      <HeaderButton href="/connect" text="Connect" />
+      <Button onPress={walletConnect}></Button>
     </View>
   </View>
 );
